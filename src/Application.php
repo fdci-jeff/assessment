@@ -27,6 +27,9 @@ use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\Middleware\AuthorizationMiddleware;
+use Authorization\Exception\ForbiddenException;
 
 /**
  * Application setup class.
@@ -84,6 +87,9 @@ class Application extends BaseApplication
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
 
+            // create a middleware instance to redirect the user to the login page
+
+
             // Add routing middleware.
             // If you have a large number of routes connected, turning on routes
             // caching in production could improve performance. For that when
@@ -97,6 +103,13 @@ class Application extends BaseApplication
             // https://book.cakephp.org/4/en/controllers/middleware.html#body-parser-middleware
             ->add(new BodyParserMiddleware())
 
+            // The AuthorizationMiddleware is responsible for authorizing incoming requests
+            // against application permissions.
+            // By default it will load the policy providers and authorization checker from
+            // Application.php. The recommended way to configure authorization is using
+            // Application::getAuthorizationService().
+            // https://book.cakephp.org/authorization/2/en/middleware.html#authorization-middleware
+           
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/4/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
             ->add(new CsrfProtectionMiddleware([
